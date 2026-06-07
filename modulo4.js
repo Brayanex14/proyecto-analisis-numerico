@@ -1,9 +1,7 @@
 /* ===================== MODULO 4 - INTEGRACION NUMERICA (Trapecio, Simpson 1/3, Simpson 3/8) ===================== */
 const M4_DEF={dias:[1,5,11,16,23,29],pollo:[18,20,25,28,24,21],arroz:[7.0,7.4,8.6,9.2,8.8,8.4],aceite:[14,15,17,18,17,16]};
-const M4_PROD=[{key:'pollo',name:'Pollo',unit:'kg',qid:'m4_q_pollo',color:'#E4A64D'},
-               {key:'arroz',name:'Arroz',unit:'kg',qid:'m4_q_arroz',color:'#6FC0A8'},
-               {key:'aceite',name:'Aceite',unit:'L',qid:'m4_q_aceite',color:'#7FA8D6'}];
-let costChart=null;
+const M4_PROD=[{key:'pollo',name:'Pollo',unit:'kg',qid:'m4_q_pollo',color:'#E4A64D',fill:'rgba(228,166,77,.18)'},{key:'arroz',name:'Arroz',unit:'kg',qid:'m4_q_arroz',color:'#6FC0A8',fill:'rgba(111,192,168,.18)'},{key:'aceite',name:'Aceite',unit:'L',qid:'m4_q_aceite',color:'#7FA8D6',fill:'rgba(127,168,214,.18)'}];
+let costChart=null; let areaChart=null; let m4Last=null;
 
 // --- spline cubico natural (mismo nucleo del Modulo 3) ---
 function naturalCubicSpline(xs,ys){
@@ -40,11 +38,13 @@ function m4Calc(){
     const s=sample(sp,t0,t1,n), sref=sample(sp,t0,t1,600);
     const iTrap=trapecio(s.f,s.h), iS13=simpson13(s.f,s.h), iS38=simpson38(s.f,s.h), iRef=simpson13(sref.f,sref.h);
     const gNormal=q*M4_DEF[p.key][0]*span;   // precio del dia 1 mantenido
-    const item={name:p.name,color:p.color,q,gS13:q*iS13,gRef:q*iRef,gNormal,perdida:q*iRef-gNormal};
+    const item={key:p.key,name:p.name,color:p.color,q,sp,integral:iS13,normalPrice:M4_DEF[p.key][0],gS13:q*iS13,gRef:q*iRef,gNormal,perdida:q*iRef-gNormal};
     per.push(item);
     totTrap+=q*iTrap; totS13+=q*iS13; totS38+=q*iS38; totRef+=q*iRef; totNormal+=gNormal;
   });
   const perdida=totRef-totNormal;
+  m4Last={t0,t1,items:{}}; per.forEach(it=>m4Last.items[it.key]=it);
+  m4RenderArea();
   m4RenderRes(totS13,totNormal,perdida);
   m4RenderChart(per);
   m4RenderMethods({totTrap,totS13,totS38,totRef});
@@ -94,8 +94,28 @@ function m4RenderPlain(per,crisis,normal,perdida){
   const top=per.slice().sort((a,b)=>b.perdida-a.perdida)[0];
   el.innerHTML=`Sumando el costo de cada d\u00eda, la familia gast\u00f3 alrededor de <b>Bs ${crisis.toFixed(0)}</b> en pollo, arroz y aceite. Si los precios se hubieran mantenido como al inicio, habr\u00eda gastado <b>Bs ${normal.toFixed(0)}</b>. Esos <b>Bs ${perdida.toFixed(0)}</b> de diferencia son el golpe real del conflicto al bolsillo, y el <b>${top.name}</b> fue el que m\u00e1s lo encareci\u00f3.`;
 }
+function m4RenderArea(){
+  if(!m4Last) return;
+  const sel=document.getElementById('m4_prodSel'); if(!sel) return;
+  const key=sel.value, prod=M4_PROD.find(p=>p.key===key), it=m4Last.items[key], t0=m4Last.t0, t1=m4Last.t1;
+  const curve=[]; for(let x=t0;x<=t1+1e-9;x+=0.2) curve.push({x:+x.toFixed(2),y:splineEval(it.sp,x)});
+  const base=[{x:t0,y:it.normalPrice},{x:t1,y:it.normalPrice}];
+  if(areaChart)areaChart.destroy();
+  areaChart=new Chart(document.getElementById('areaChart'),{type:'line',
+    data:{datasets:[
+      {label:'Precio '+prod.name+' P(t)',data:curve,borderColor:prod.color,backgroundColor:prod.fill,borderWidth:2.5,pointRadius:0,fill:'origin',tension:0},
+      {label:'Precio del d\u00eda 1',data:base,borderColor:'#9aa0aa',borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false}
+    ]},
+    options:{responsive:true,parsing:false,
+      plugins:{legend:{labels:{color:'#B6AC94',font:{family:'IBM Plex Mono',size:10}}}},
+      scales:{y:{min:0,grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#82785F',font:{family:'IBM Plex Mono',size:10}},title:{display:true,text:'precio (Bs/'+prod.unit+')',color:'#82785F',font:{family:'IBM Plex Mono',size:10}}},
+              x:{type:'linear',grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#82785F',font:{family:'IBM Plex Mono',size:10}},title:{display:true,text:'d\u00eda del conflicto',color:'#82785F',font:{family:'IBM Plex Mono',size:10}}}}
+    }});
+  document.getElementById('m4_areaNote').innerHTML='El \u00e1rea sombreada bajo la curva es la integral del precio del '+prod.name+' (\u2248 '+it.integral.toFixed(1)+' Bs\u00b7d\u00eda). Al multiplicarla por el consumo diario ('+it.q+' '+prod.unit+'/d\u00eda) se obtiene el gasto del mes en '+prod.name+': <b>Bs '+(it.integral*it.q).toFixed(0)+'</b>.';
+}
 function initM4(){
   m4Calc();
+  document.getElementById('m4_prodSel').addEventListener('change',m4RenderArea);
   document.getElementById('m4_btnCalc').addEventListener('click',m4Calc);
   document.getElementById('m4_btnReset').addEventListener('click',()=>{document.getElementById('m4_q_pollo').value='1';document.getElementById('m4_q_arroz').value='0.6';document.getElementById('m4_q_aceite').value='0.15';document.getElementById('m4_n').value='30';m4Calc();});
 }
