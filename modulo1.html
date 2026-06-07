@@ -17,32 +17,50 @@
 <main class="subpage">
 <div class="container section">
     <div class="section-head">
-      <div class="modnum"><span class="ln"></span> M&#211;DULO 01 &#183; SISTEMAS DE ECUACIONES LINEALES</div>
-      <h2>Distribuci&#243;n de ox&#237;geno bajo bloqueo</h2>
-      <p class="dim" style="max-width:80ch">En La Paz, los bloqueos de caminos pueden dejar a los hospitales <b style="color:var(--text)">sin oxígeno</b>. Tres plantas lo producen y tres hospitales lo necesitan, pero las rutas son compartidas y no es evidente cuánto debe enviar cada planta. Aquí usamos matemáticas para encontrar ese reparto exacto con el método de <b style="color:var(--text)">Gauss-Seidel</b>.</p>
+      <div class="modnum"><span class="ln"></span> MÓDULO 01 · SISTEMAS DE ECUACIONES LINEALES</div>
+      <h2>Distribución de oxígeno bajo bloqueo</h2>
+      <p class="dim" style="max-width:80ch">En La Paz, los bloqueos pueden dejar a los hospitales <b style="color:var(--text)">sin oxígeno</b>. Tres plantas lo producen y tres hospitales lo necesitan, pero las rutas son compartidas. Resolvemos <span class="mono" style="color:var(--ochre)">A·x = b</span> y puedes elegir <b style="color:var(--text)">con qué método</b> hacerlo.</p>
     </div>
 
     <div class="panel explain mb-4">
       <div class="panel-label">El problema, en palabras simples</div>
-      <p class="plain">Durante un bloqueo, los camiones no pueden circular y los hospitales corren el riesgo de quedarse <b>sin oxígeno</b>. Hay <b>tres plantas</b> que producen oxígeno y <b>tres hospitales</b> que lo necesitan cada día. El problema es que las rutas que los conectan <b>se comparten</b>: lo que sale de una planta no llega completo a un solo hospital, sino repartido entre varios. La pregunta es fácil de enunciar pero difícil de resolver a mano: <b>¿cuánto oxígeno debe despachar cada planta para que ningún hospital se quede corto?</b></p>
+      <p class="plain">Durante un bloqueo, los camiones no pueden circular y los hospitales corren el riesgo de quedarse <b>sin oxígeno</b>. Hay <b>tres plantas</b> que producen oxígeno y <b>tres hospitales</b> que lo necesitan cada día. El problema es que las rutas que los conectan <b>se comparten</b>: lo que sale de una planta no llega completo a un solo hospital, sino repartido entre varios. La pregunta es: <b>¿cuánto oxígeno debe despachar cada planta para que ningún hospital se quede corto?</b></p>
       <div class="row g-3 mt-1">
-        <div class="col-md-6"><div class="know-box"><div class="know-h">&#10003; Lo que S&#205; sabemos</div><ul class="know-ul"><li>Cuánto oxígeno necesita cada hospital al día (la <b>demanda</b>): 120, 150 y 180 cilindros.</li><li>Cómo se reparten las rutas entre plantas y hospitales (los números de la <b>matriz</b>).</li></ul></div></div>
-        <div class="col-md-6"><div class="know-box want"><div class="know-h">? Lo que QUEREMOS averiguar</div><ul class="know-ul"><li>Cuántos cilindros debe producir y enviar <b>cada planta</b>. Esos tres números desconocidos son x&#8321;, x&#8322; y x&#8323;.</li></ul></div></div>
+        <div class="col-md-6"><div class="know-box"><div class="know-h">&#10003; Lo que SÍ sabemos</div><ul class="know-ul"><li>Cuánto oxígeno necesita cada hospital al día (la <b>demanda</b>): 120, 150 y 180 cilindros.</li><li>Cómo se reparten las rutas entre plantas y hospitales (los números de la <b>matriz</b>).</li></ul></div></div>
+        <div class="col-md-6"><div class="know-box want"><div class="know-h">? Lo que QUEREMOS averiguar</div><ul class="know-ul"><li>Cuántos cilindros debe producir y enviar <b>cada planta</b>. Esos tres números desconocidos son x₁, x₂ y x₃.</li></ul></div></div>
       </div>
       <div class="panel-label" style="margin-top:1.4rem">¿Qué representa cada incógnita?</div>
       <div class="xi-list">
-        <div class="xi-item"><span class="xi-chip">x&#8321;</span><div><b>Planta Achacachi</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
-        <div class="xi-item"><span class="xi-chip">x&#8322;</span><div><b>Planta Senkata</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
-        <div class="xi-item"><span class="xi-chip">x&#8323;</span><div><b>Planta Patacamaya</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
+        <div class="xi-item"><span class="xi-chip">x₁</span><div><b>Planta Achacachi</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
+        <div class="xi-item"><span class="xi-chip">x₂</span><div><b>Planta Senkata</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
+        <div class="xi-item"><span class="xi-chip">x₃</span><div><b>Planta Patacamaya</b><small>cilindros de oxígeno que debe despachar por día</small></div></div>
       </div>
-      <div class="concept-box mt-3"><b>¿Cómo lo resuelve la computadora?</b> No despeja todo de golpe. Hace una <b>primera estimación</b> y la va <b>corrigiendo poco a poco</b>, como cuando regulas la temperatura de la ducha: abres, sientes, ajustas, vuelves a sentir… hasta que está bien. Cada ajuste es una <b>iteración</b>, y el <b>&#8220;error&#8221;</b> mide cuánto cambió respecto al intento anterior: cuando casi no cambia, es que ya encontró la respuesta. A ese procedimiento se le llama <b>método de Gauss-Seidel</b>.</div>
+      <div class="concept-box mt-3" style="border-left-color:var(--ochre)"><b>¿Por qué hay varios métodos?</b> Resolver A·x=b se puede hacer de varias formas, pero cada una exige algo distinto de la matriz:<br>
+      &#8226; <b>Jacobi, Gauss-Seidel y SOR</b> (iterativos): tantean una respuesta y la corrigen poco a poco. Convergen seguro si la matriz es <b>diagonalmente dominante</b> (la diagonal pesa más que el resto de su fila).<br>
+      &#8226; <b>Gradiente Conjugado</b> (iterativo): muy rápido, pero solo sirve si la matriz es <b>simétrica y definida positiva</b>.<br>
+      &#8226; <b>LU</b> (directo): factoriza la matriz y resuelve <b>de un solo paso</b>; funciona con <b>cualquier</b> matriz mientras no sea <b>singular</b> (determinante ≠ 0).<br>
+      Si eliges un método y la matriz no cumple su condición, la página te lo explica en lugar de dar un resultado falso.</div>
     </div>
 
     <div class="row g-4">
       <div class="col-lg-5">
         <div class="panel h-100">
-          <div class="panel-label">Par&#225;metros de entrada</div>
-          <div class="algo-note">Gauss-Seidel despeja cada inc&#243;gnita y reutiliza los valores ya actualizados en la misma iteraci&#243;n: <code>x&#7522; = (b&#7522; &#8722; &#931; a&#7522;&#11388;x&#11388;) / a&#7522;&#7522;</code>. Converge garantizado si la matriz es <b style="color:var(--text)">diagonalmente dominante</b>.</div>
+          <div class="panel-label">Parámetros de entrada</div>
+          <div class="mb-3">
+            <label class="cell-lbl d-block mb-1">MÉTODO DE RESOLUCIÓN</label>
+            <select id="m1_method" class="num-in" style="text-align:left">
+              <option value="gauss">Gauss-Seidel (iterativo)</option>
+              <option value="jacobi">Jacobi (iterativo)</option>
+              <option value="sor">SOR · sobre-relajación (iterativo)</option>
+              <option value="lu">Descomposición LU (directo)</option>
+              <option value="cg">Gradiente Conjugado (iterativo)</option>
+            </select>
+            <p class="helper mt-2 mb-0" id="m1_methodDesc"></p>
+            <div id="m1_omegaWrap" class="mt-2" style="display:none">
+              <label class="cell-lbl d-block mb-1">FACTOR ω (SOR · entre 0 y 2)</label>
+              <input type="number" id="m1_omega" class="num-in" value="1.1" step="0.05" style="max-width:130px">
+            </div>
+          </div>
           <div class="cell-lbl mb-2">MATRIZ DE RUTAS A &#183; VECTOR DEMANDA b (cilindros)</div>
           <div class="matrix-wrap mb-3">
             <div class="brace">[</div><div class="matrix-grid" id="matrixGrid"></div><div class="brace">]</div>
@@ -50,34 +68,38 @@
           </div>
           <div class="row g-2 mb-3">
             <div class="col-6"><label class="cell-lbl d-block mb-1">TOLERANCIA (error rel. %)</label><input type="number" id="tol" class="num-in" value="0.01" step="0.001"></div>
-            <div class="col-6"><label class="cell-lbl d-block mb-1">M&#193;X. ITERACIONES</label><input type="number" id="maxit" class="num-in" value="100" step="1"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">MÁX. ITERACIONES</label><input type="number" id="maxit" class="num-in" value="100" step="1"></div>
           </div>
           <div id="domBadge" class="mb-3"></div>
           <div class="d-flex gap-2 flex-wrap">
-            <button class="btn-calc" id="btnCalc">&#9656; Calcular</button>
-            <button class="btn-ghost" id="btnBlock">Simular bloqueo (a&#8321;&#8321;&#8594;0.2)</button>
+            <button class="btn-calc" id="btnCalc">▸ Calcular</button>
+            <button class="btn-ghost" id="btnBlock">Simular bloqueo (a₁₁→0.2)</button>
             <button class="btn-ghost" id="btnReset">Restaurar</button>
           </div>
-          <p class="helper mt-3 mb-0">Pista: baja un valor de la diagonal y observa c&#243;mo el sistema pierde dominancia, tarda m&#225;s en converger o se vuelve inestable.</p>
+          <p class="helper mt-3 mb-0">Cambia los coeficientes o el método. Si la matriz no cumple el requisito del método elegido, abajo se explica por qué.</p>
         </div>
       </div>
       <div class="col-lg-7">
         <div class="panel mb-4">
-          <div class="panel-label">Soluci&#243;n &#183; distribuci&#243;n por planta</div>
-          <div class="res-x" id="solBox"><p class="dim mb-0">Presiona <b style="color:var(--text)">Calcular</b> para resolver el sistema.</p></div>
+          <div class="panel-label">Solución · distribución por planta</div>
+          <div class="res-x" id="solBox"></div>
         </div>
-        <div class="row g-4">
-          <div class="col-md-6"><div class="panel h-100"><div class="panel-label">Convergencia del error</div><canvas id="convChart" height="200"></canvas></div></div>
-          <div class="col-md-6"><div class="panel h-100"><div class="panel-label">Tabla de iteraciones</div><div class="tbl-scroll"><table class="tbl-iter"><thead><tr><th>k</th><th>x&#8321;</th><th>x&#8322;</th><th>x&#8323;</th><th>error %</th></tr></thead><tbody id="iterBody"><tr><td colspan="5" style="text-align:center;color:var(--text-faint)">&#8212;</td></tr></tbody></table></div></div></div>
+        <div class="panel mb-4" id="m1_chartPanel">
+          <div class="panel-label" id="m1_chartLabel">Convergencia del error</div>
+          <canvas id="convChart" height="200"></canvas>
         </div>
-        <div class="interp mt-4" id="interpBox" style="display:none"><h5>Interpretaci&#243;n del resultado</h5><div id="interpText"></div></div>
+        <div class="panel">
+          <div class="panel-label" id="m1_detailLabel">Tabla de iteraciones</div>
+          <div id="m1_detail"></div>
+        </div>
+        <div class="interp mt-4" id="interpBox" style="display:none"><h5>Interpretación del resultado</h5><div id="interpText"></div></div>
       </div>
     </div>
 
     <div class="panel conclusion-card mt-4">
       <div class="panel-label">En resumen · ¿qué nos dice este módulo?</div>
       <p class="plain mb-2" id="plainConclusion"></p>
-      <p class="plain faint-note mb-0">Si pruebas el botón <b>&#8220;Simular bloqueo&#8221;</b>, verás que al cortar una ruta principal el método necesita muchos más intentos para hallar la respuesta —o ya no puede hallarla—. Eso es justo lo que pasa en la realidad: <b>un solo corte de ruta puede desarticular todo el abastecimiento de oxígeno de la ciudad.</b></p>
+      <p class="plain faint-note mb-0">Si pruebas el botón <b>“Simular bloqueo”</b>, verás que al cortar una ruta principal los métodos iterativos tardan mucho más en converger —o ya no pueden—. Eso refleja cómo <b>un solo corte de ruta puede desarticular todo el abastecimiento de oxígeno de la ciudad.</b></p>
     </div>
   </div>
 </main>
