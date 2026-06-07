@@ -184,3 +184,10 @@ select.num-in{cursor:pointer}
 .lu-table{width:100%;font-family:var(--font-mono);font-size:.85rem;border-collapse:collapse}
 .lu-table td{border:1px solid var(--line);padding:.45rem .3rem;text-align:center;color:var(--text-dim)}
 select.num-in{cursor:pointer}
+
+/* Conclusiones: tabla resumen */
+.ctab{width:100%;border-collapse:collapse;font-size:.9rem}
+.ctab th{text-align:left;font-family:var(--font-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ochre);padding:.6rem .7rem;border-bottom:1px solid var(--line);white-space:nowrap}
+.ctab td{padding:.65rem .7rem;border-bottom:1px solid var(--line-soft);color:var(--text-dim);vertical-align:top;line-height:1.5}
+.ctab td b{color:var(--text)}
+.ctab tr:hover td{background:rgba(255,255,255,.02)}
