@@ -9,14 +9,84 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="bg-atmos"></div><div class="bg-grid"></div>
 <nav class="navbar navbar-expand-lg fixed-top"><div class="container"><a class="navbar-brand d-flex align-items-center" href="index.html"><span class="brand-mark">&#8721;</span> SimNum<span class="dim" style="font-weight:400">&#183;Crisis</span></a><button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse justify-content-end" id="nav"><ul class="navbar-nav align-items-lg-center"><li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li><li class="nav-item"><a class="nav-link" href="modulo1.html">Sistemas de ecuaciones lineales</a></li><li class="nav-item"><a class="nav-link" href="modulo2.html">Ecuaciones diferenciales ordinarias</a></li><li class="nav-item"><a class="nav-link" href="modulo3.html">Interpolaci&#243;n</a></li><li class="nav-item"><a class="nav-link" href="modulo4.html">Integraci&#243;n num&#233;rica</a></li><li class="nav-item"><a class="nav-link active" href="modulo5.html">M&#233;todos de ra&#237;ces de ecuaciones</a></li><li class="nav-item"><a class="nav-link" href="conclusiones.html">Conclusiones</a></li></ul></div></div></nav>
 <main class="subpage">
-<div class="container section"><div class="section-head"><div class="modnum"><span class="ln"></span> M&#211;DULO 05 &#183; RA&#205;CES DE ECUACIONES</div><h2>El &#8220;d&#237;a cero&#8221; &#183; Newton-Raphson</h2></div><div class="soon-wrap"><div class="soon-tag">En desarrollo &#183; pr&#243;xima entrega</div><p class="dim mt-3 mb-0" style="max-width:55ch;margin:auto">Encontrar&#225; el d&#237;a exacto en que el gasto acumulado iguala el presupuesto de una familia, resolviendo f(t)=GastoAcumulado(t)&#8722;Presupuesto.</p><div class="soon-data">Presupuesto de alimentaci&#243;n = <b>Bs 2.200</b><br>M&#233;todo: <b>Newton-Raphson</b> con tabla de iteraciones</div></div></div>
+<div class="container section">
+    <div class="section-head">
+      <div class="modnum"><span class="ln"></span> MÓDULO 05 · MÉTODOS DE RAÍCES DE ECUACIONES</div>
+      <h2>El “día cero” del presupuesto familiar</h2>
+      <p class="dim" style="max-width:80ch">¿Qué día exacto se le acaba a la familia lo que destinó para comer? Buscamos el día en que el <b style="color:var(--text)">gasto acumulado iguala al presupuesto</b>: ahí la función vale cero. Lo resolvemos con <b style="color:var(--text)">Newton-Raphson</b>, y lo comparamos con Bisección y Secante.</p>
+    </div>
+
+    <div class="panel explain mb-4">
+      <div class="panel-label">El problema, en palabras simples</div>
+      <p class="plain">La familia apartó cierto dinero para comprar pollo, arroz y aceite durante el mes. Como compra todos los días y los precios suben, ese dinero se va consumiendo. Queremos saber <b>el día exacto en que el gasto acumulado alcanza el presupuesto</b> —el “día cero”, cuando se queda sin fondos para esos productos—. Matemáticamente, definimos <span class="mono" style="color:var(--ochre)">f(t) = gasto acumulado(t) − presupuesto</span> y buscamos dónde <b>f(t) = 0</b>. Ese punto se llama <b>raíz</b> de la función.</p>
+      <div class="panel-label" style="margin-top:1.4rem">¿Qué es cada cosa?</div>
+      <div class="xi-list">
+        <div class="xi-item"><span class="xi-chip" style="font-size:1rem">f(t)</span><div><b>La función</b><small>gasto acumulado hasta el día t, menos el presupuesto</small></div></div>
+        <div class="xi-item"><span class="xi-chip" style="font-size:1.4rem">&#8226;</span><div><b>Raíz (día cero)</b><small>el día donde f(t)=0: el gasto iguala al presupuesto</small></div></div>
+        <div class="xi-item"><span class="xi-chip" style="font-size:.95rem">x₀</span><div><b>Estimación inicial</b><small>el día por el que el método empieza a buscar</small></div></div>
+      </div>
+      <div class="concept-box mt-3"><b>Tres formas de encontrar la raíz:</b><br>
+      &#8226; <b>Bisección</b>: parte el intervalo a la mitad una y otra vez. Lenta, pero infalible si hay un cambio de signo.<br>
+      &#8226; <b>Newton-Raphson</b>: usa la <b>pendiente</b> de la función para saltar muy cerca de la raíz. Rapísima, pero necesita la derivada y una buena estimación inicial.<br>
+      &#8226; <b>Secante</b>: como Newton, pero estima la pendiente con dos puntos, sin necesitar la derivada.</div>
+      <div class="concept-box mt-3" style="border-left-color:var(--ochre)"><b>¿Qué es el “orden de convergencia”?</b> Mide qué tan rápido se acerca cada método a la respuesta. Newton casi <b>duplica los decimales correctos</b> en cada paso (orden ≈ 2), la Secante un poco menos (≈ 1,6) y la Bisección gana aproximadamente un decimal cada 3 pasos (orden ≈ 1).</div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="panel h-100">
+          <div class="panel-label">Parámetros</div>
+          <div class="algo-note">Newton-Raphson: <code>tₙ₊₁ = tₙ − f(tₙ)/f′(tₙ)</code>. Aquí <code>f′(t)</code> es el gasto diario (consumo × precio del día), así que no hace falta derivar numéricamente.</div>
+          <div class="row g-3">
+            <div class="col-12"><label class="cell-lbl d-block mb-1">PRESUPUESTO PARA LOS 3 PRODUCTOS — Bs</label><input type="number" id="m5_budget" class="num-in" value="600" step="50"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">ESTIMACIÓN INICIAL x₀ — día</label><input type="number" id="m5_x0" class="num-in" value="15" step="1"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">MÉTODO (detalle)</label><select id="m5_method" class="num-in" style="text-align:left"><option value="newton">Newton-Raphson</option><option value="biseccion">Bisección</option><option value="secante">Secante</option></select></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">TOLERANCIA — días</label><input type="number" id="m5_tol" class="num-in" value="0.0001" step="0.0001"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">MÁX. ITERACIONES</label><input type="number" id="m5_maxit" class="num-in" value="50" step="1"></div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <button class="btn-calc" id="m5_btnCalc">▸ Encontrar el día cero</button>
+            <button class="btn-ghost" id="m5_btnReset">Restaurar</button>
+          </div>
+          <p class="helper mt-3 mb-0">Consumo diario fijo: pollo 1 kg, arroz 0,6 kg, aceite 0,15 L (igual que el Módulo 4). Si el presupuesto supera el gasto de todo el mes, no habrá día cero y se te explicará.</p>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="panel mb-4">
+          <div class="panel-label">Resultado</div>
+          <div class="res-x" id="m5_resBox"></div>
+        </div>
+        <div class="panel mb-4">
+          <div class="panel-label">La función f(t) y su raíz</div>
+          <canvas id="rootChart" height="220"></canvas>
+        </div>
+        <div class="panel mb-4">
+          <div class="panel-label" id="m5_detailLabel">Tabla de iteraciones</div>
+          <div class="tbl-scroll" id="m5_detail"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Comparación de métodos</div>
+          <div class="tbl-scroll"><table class="tbl-iter"><thead><tr><th>Método</th><th>Iteraciones</th><th>Orden estimado</th></tr></thead><tbody id="m5_cmpBody"></tbody></table></div>
+        </div>
+        <div class="interp mt-4" id="m5_interpBox" style="display:none"><h5>Interpretación del resultado</h5><div id="m5_interpText"></div></div>
+      </div>
+    </div>
+
+    <div class="panel conclusion-card mt-4">
+      <div class="panel-label">En resumen · ¿qué nos dice este módulo?</div>
+      <p class="plain mb-2" id="m5_plainConclusion"></p>
+      <p class="plain faint-note mb-0">Este “día cero” conecta todo el proyecto: usa la curva de precios del Módulo 3 y la integración del Módulo 4 para traducir la crisis en una fecha concreta en que el presupuesto familiar se agota.</p>
+    </div>
+  </div>
 </main>
 <footer><div class="container d-flex flex-wrap justify-content-between gap-2"><span>SIMNUM&#183;CRISIS &#8212; Proyecto final de M&#233;todos Num&#233;ricos</span><span class="faint">An&#225;lisis estrictamente acad&#233;mico y neutral &#183; La Paz / El Alto</span></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="modulo5.js"></script>
 </body>
 </html>
