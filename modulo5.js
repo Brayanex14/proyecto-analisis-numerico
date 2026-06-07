@@ -60,9 +60,10 @@ function estOrder(rows,r){
 // --- render ---
 function m5RenderRes(root,B,G,t1){
   const total=G(t1); const box=document.getElementById('m5_resBox');
-  const dia=Math.floor(root), hrs=Math.round((root-dia)*24);
-  box.innerHTML=`<div class="x-row"><div class="name">Día cero<small>cuando el gasto acumulado = Bs ${B}</small></div><div class="qty">día ${root.toFixed(2)}</div></div>`+
-   `<div class="x-row"><div class="name">Equivale a<small>desde el inicio del conflicto</small></div><div class="qty" style="font-size:1.15rem;color:var(--text-dim)">${dia} d ${hrs} h</div></div>`+
+  const com=v=>v.toFixed(2).replace('.',',');
+  const dia=Math.round(root), hrs=Math.round((root-Math.floor(root))*24);
+  box.innerHTML=`<div class="x-row"><div class="name">Día cero<small>cuando el gasto acumulado = Bs ${B}</small></div><div class="qty">\u2248 día ${dia}</div></div>`+
+   `<div class="x-row"><div class="name">Valor exacto del método<small>t = ${com(root)} días \u00b7 el decimal es una fracción del día (\u2248 ${hrs} h), no una fecha</small></div><div class="qty" style="font-size:1.05rem;color:var(--text-dim)">${com(root)}</div></div>`+
    `<div class="x-row"><div class="name">Gasto total del mes<small>si comprara los 29 días</small></div><div class="qty" style="font-size:1.15rem;color:var(--teal)">Bs ${total.toFixed(0)}</div></div>`;
 }
 function m5RenderChart(F,root){
@@ -102,12 +103,12 @@ function m5RenderCmp(runs,r){
 function m5RenderInterp(runs,method,r,F,B){
   const box=document.getElementById('m5_interpBox'),txt=document.getElementById('m5_interpText'); box.style.display='block';
   const it=runs[method].iterations, names={newton:'Newton-Raphson',biseccion:'Bisección',secante:'Secante'};
-  txt.innerHTML=`Con <b>${names[method]}</b> se encontró que el gasto acumulado alcanza el presupuesto de <b>Bs ${B}</b> alrededor del <b>día ${r.toFixed(2)}</b>, en <b>${it}</b> iteraciones. Comparando los tres métodos: <b>Newton</b> es el más rápido (orden ≈ 2) pero exige una buena estimación inicial; la <b>Secante</b> es casi tan rápida sin usar la derivada; y la <b>Bisección</b> es la más lenta pero la más robusta, porque solo necesita que la función cambie de signo en el intervalo.`;
+  txt.innerHTML=`Con <b>${names[method]}</b> se encontró que el gasto acumulado alcanza el presupuesto de <b>Bs ${B}</b> alrededor del <b>día ${Math.round(r)}</b> (t = ${r.toFixed(2).replace('.',',')} días), en <b>${it}</b> iteraciones. Comparando los tres métodos: <b>Newton</b> es el más rápido (orden ≈ 2) pero exige una buena estimación inicial; la <b>Secante</b> es casi tan rápida sin usar la derivada; y la <b>Bisección</b> es la más lenta pero la más robusta, porque solo necesita que la función cambie de signo en el intervalo.`;
 }
 function m5RenderPlain(r,B){
   const el=document.getElementById('m5_plainConclusion'); if(!el)return;
-  const dia=Math.floor(r);
-  el.innerHTML=`Con un presupuesto de <b>Bs ${B}</b> para pollo, arroz y aceite, la familia agotaría ese dinero alrededor del <b>día ${r.toFixed(1)}</b> del mes (cerca del día ${dia}). A partir de ahí ya no le alcanzaría para mantener el mismo consumo: tendría que comprar menos o buscar productos más baratos.`;
+  const dia=Math.round(r); const com=r.toFixed(2).replace('.',',');
+  el.innerHTML=`Con un presupuesto de <b>Bs ${B}</b> para pollo, arroz y aceite, la familia agotaría ese dinero <b>alrededor del día ${dia}</b> del mes (el método lo ubica con precisión en t = ${com} días, donde el decimal es una fracción del día, no una fecha). A partir de ahí ya no le alcanzaría para mantener el mismo consumo: tendría que comprar menos o buscar productos más baratos.`;
 }
 function m5NoRoot(F,B,total){
   document.getElementById('m5_resBox').innerHTML=`<div class="blocked-msg">⚠ No hay “día cero” este mes<p>Con un presupuesto de Bs ${B}, el gasto del mes (≈ Bs ${total.toFixed(0)}) ${B<=0?'ya estaría superado desde el inicio':'nunca llega a ese límite'}. ${B>0?'Baja el presupuesto por debajo de Bs '+total.toFixed(0)+' para ver un día cero.':''}</p></div>`;
