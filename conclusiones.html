@@ -14,7 +14,110 @@
 <div class="bg-atmos"></div><div class="bg-grid"></div>
 <nav class="navbar navbar-expand-lg fixed-top"><div class="container"><a class="navbar-brand d-flex align-items-center" href="index.html"><span class="brand-mark">&#8721;</span> SimNum<span class="dim" style="font-weight:400">&#183;Crisis</span></a><button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse justify-content-end" id="nav"><ul class="navbar-nav align-items-lg-center"><li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li><li class="nav-item"><a class="nav-link" href="modulo1.html">Sistemas de ecuaciones lineales</a></li><li class="nav-item"><a class="nav-link" href="modulo2.html">Ecuaciones diferenciales ordinarias</a></li><li class="nav-item"><a class="nav-link" href="modulo3.html">Interpolaci&#243;n</a></li><li class="nav-item"><a class="nav-link" href="modulo4.html">Integraci&#243;n num&#233;rica</a></li><li class="nav-item"><a class="nav-link" href="modulo5.html">M&#233;todos de ra&#237;ces de ecuaciones</a></li><li class="nav-item"><a class="nav-link active" href="conclusiones.html">Conclusiones</a></li></ul></div></div></nav>
 <main class="subpage">
-<div class="container section"><div class="section-head"><div class="modnum"><span class="ln"></span> CIERRE</div><h2>Conclusiones y limitaciones</h2></div><div class="soon-wrap"><div class="soon-tag">En desarrollo &#183; pr&#243;xima entrega</div><p class="dim mt-3 mb-0" style="max-width:55ch;margin:auto">Comparativa de qu&#233; m&#233;todo num&#233;rico result&#243; m&#225;s &#250;til y preciso, limitaciones de los modelos y posibles mejoras.</p></div></div>
+<div class="container section">
+    <div class="section-head">
+      <div class="modnum"><span class="ln"></span> CIERRE</div>
+      <h2>Conclusiones</h2>
+      <p class="dim" style="max-width:82ch">Este proyecto tradujo una crisis social real —los bloqueos que afectan a La Paz y El Alto— al lenguaje de los métodos numéricos. Cada eslabón de la cascada del desabastecimiento se modeló con una familia distinta de técnicas matemáticas. A continuación recopilamos <b style="color:var(--text)">todo lo que construimos</b>, la <b style="color:var(--text)">matemática que aplicamos</b>, qué método resultó más útil en cada caso, las limitaciones del modelo, las mejoras posibles y una reflexión final.</p>
+    </div>
+
+    <!-- ====== LO QUE CONSTRUIMOS ====== -->
+    <div class="panel explain mb-4">
+      <div class="panel-label">1 · Lo que construimos</div>
+      <p class="plain">Desarrollamos una <b>aplicación web interactiva</b> (HTML, CSS y JavaScript puro, sin librerías matemáticas externas) que descompone la crisis en cinco módulos, más una página de inicio que ancla todo en datos reales de Bolivia. Cada método numérico se implementó desde cero, con formularios para modificar parámetros y resultados que se muestran en tablas, gráficos e interpretaciones automáticas.</p>
+      <p class="plain">El <b>Inicio</b> presenta el problema y lo contextualiza con cifras reportadas —el kilo de pollo escaló de ~Bs 18 a Bs 25–30 durante el bloqueo, el arroz subió 32% en La Paz, la canasta básica de alimentos ronda Bs 1.664 al mes (≈ 60% del salario mínimo, que pasó a Bs 3.300 en 2026)— y un <b>mapa de Bolivia</b> que dibuja la red de abastecimiento y marca los 91 puntos de bloqueo en seis departamentos según el reporte de la ABC. La crisis también golpeó al sector avícola: se reportaron más de 100 mil pollos muertos por no poder salir de las granjas, un dato que conecta directamente con el Módulo 2.</p>
+      <p class="plain mb-0">A partir de ahí, los cinco módulos siguen la cascada del desabastecimiento:</p>
+      <div class="xi-list mt-3">
+        <div class="xi-item"><span class="xi-chip">01</span><div><b>Sistemas de ecuaciones lineales</b><small>distribución de cilindros de oxígeno entre tres plantas y tres hospitales de La Paz</small></div></div>
+        <div class="xi-item"><span class="xi-chip">02</span><div><b>Ecuaciones diferenciales ordinarias</b><small>vaciado del silo de alimento de una granja avícola de 30.000 aves durante el bloqueo</small></div></div>
+        <div class="xi-item"><span class="xi-chip">03</span><div><b>Interpolación</b><small>reconstrucción de la curva continua de precios de la canasta a partir de datos dispersos</small></div></div>
+        <div class="xi-item"><span class="xi-chip">04</span><div><b>Integración numérica</b><small>gasto mensual acumulado de la familia y pérdida del poder adquisitivo</small></div></div>
+        <div class="xi-item"><span class="xi-chip">05</span><div><b>Métodos de raíces</b><small>el “día cero” en que el gasto acumulado agota el presupuesto familiar</small></div></div>
+      </div>
+      <p class="plain mt-3 mb-0">Los tres últimos módulos están <b>encadenados</b>: la curva de precios del Módulo 3 alimenta la integración del Módulo 4, y ambos sostienen la búsqueda de raíz del Módulo 5. Verificamos numéricamente esa coherencia: el gasto total del mes (≈ Bs 875) es el mismo en los Módulos 4 y 5.</p>
+    </div>
+
+    <!-- ====== LA MATEMATICA ====== -->
+    <div class="panel explain mb-4">
+      <div class="panel-label">2 · La matemática que aplicamos</div>
+      <p class="plain">Cada módulo usó una familia distinta de métodos numéricos. Esta es la síntesis de toda la matemática involucrada.</p>
+
+      <div class="panel-label" style="margin-top:1.6rem;color:var(--ochre)">2.1 · Sistemas de ecuaciones lineales (A·x = b)</div>
+      <p class="plain">El problema logístico se planteó como un sistema 3×3: una matriz de rutas multiplicada por las incógnitas (lo que despacha cada planta) igual al vector de demandas de los hospitales. Implementamos <b>cinco</b> métodos y, sobre todo, verificamos <b>cuándo cada uno es aplicable</b>:</p>
+      <p class="plain"><b>Jacobi</b> calcula todas las incógnitas usando los valores del paso anterior; <b>Gauss-Seidel</b> reutiliza los valores ya actualizados en el mismo paso (converge más rápido); y <b>SOR</b> es Gauss-Seidel con un factor de relajación ω que acelera la convergencia. Los tres son <b>iterativos</b> y convergen con garantía si la matriz es <b>diagonalmente dominante</b>. El <b>Gradiente Conjugado</b> es iterativo y muy eficiente, pero exige que la matriz sea <b>simétrica y definida positiva</b>. Finalmente, la <b>descomposición LU</b> es un método <b>directo</b>: factoriza la matriz en una triangular inferior por una superior y resuelve en un solo paso, sin iteraciones; funciona con cualquier matriz <b>no singular</b> (determinante distinto de cero).</p>
+      <div class="concept-box"><b>Fórmula clave (Gauss-Seidel):</b> <code>xᵢ = ( bᵢ − Σⱼ≠ᵢ aᵢⱼ·xⱼ ) / aᵢᵢ</code> &nbsp;·&nbsp; <b>SOR:</b> <code>xᵢ = (1−ω)·xᵢ + ω·xᵢ(Gauss-Seidel)</code> &nbsp;·&nbsp; <b>LU:</b> se resuelve <code>L·y = b</code> y luego <code>U·x = y</code>. Resultado del caso base: ≈ 104, 131 y 239 cilindros.</div>
+
+      <div class="panel-label" style="margin-top:1.6rem;color:var(--ochre)">2.2 · Ecuaciones diferenciales ordinarias</div>
+      <p class="plain">El vaciado del silo se modeló con la EDO <code>R′(t) = E(t) − C</code>: la rapidez con que cambia la reserva es lo que entra menos lo que consumen las aves. La resolvimos con <b>Runge-Kutta de 4.º orden (RK4)</b>, que en cada paso promedia <b>cuatro estimaciones de la pendiente</b> para avanzar con gran precisión. RK4 es de orden 4, mucho más exacto que el método de Euler (orden 1) o el de Heun (orden 2) para el mismo tamaño de paso.</p>
+      <p class="plain">Un aprendizaje clave de este módulo fue entender <b>por qué la solución es una recta</b>: como el consumo y la entrada son constantes, la pendiente <code>R′ = E−C</code> nunca cambia, y una pendiente constante produce una línea recta. Solo aparecería una curva si el ritmo variara (por ejemplo, si las aves comieran cada vez más). Además, como conocíamos la solución exacta, pudimos <b>validar</b> que RK4 la reproduce sin error apreciable.</p>
+      <div class="concept-box"><b>Fórmula de RK4:</b> <code>Rₙ₊₁ = Rₙ + (h/6)·(k₁ + 2k₂ + 2k₃ + k₄)</code>, donde las k son cuatro evaluaciones de la pendiente dentro del paso. Resultado: el silo (15 t, consumo 2,1 t/día) se agota en <code>R₀/(C−E) ≈ 7,14 días</code>.</div>
+
+      <div class="panel-label" style="margin-top:1.6rem;color:var(--ochre)">2.3 · Interpolación</div>
+      <p class="plain">Como los precios solo se registraron en seis días sueltos, usamos <b>splines cúbicos naturales</b> para construir una curva continua que pasa exactamente por esos puntos y estima los días faltantes. Un spline une cada par de nodos con un pequeño polinomio cúbico, exigiendo que en cada nodo las piezas <b>empaten suavemente</b> (primera y segunda derivada continuas) y que la curvatura sea nula en los extremos (condición “natural”). Esto se traduce en un <b>sistema tridiagonal</b> de ecuaciones, que resolvimos con el algoritmo de Thomas.</p>
+      <p class="plain">Elegimos splines en lugar de un único polinomio de alto grado (interpolación de Lagrange) porque este último tiende a <b>oscilar</b> de forma irreal entre los puntos —el llamado fenómeno de Runge—, mientras que el spline produce una estimación suave y creíble, sin precios negativos ni picos artificiales.</p>
+      <div class="concept-box"><b>Idea:</b> en cada tramo <code>[xᵢ, xᵢ₊₁]</code> el precio se aproxima por <code>Sᵢ(x) = aᵢ + bᵢ(x−xᵢ) + cᵢ(x−xᵢ)² + dᵢ(x−xᵢ)³</code>, con coeficientes elegidos para que toda la curva sea continua y suave. Resultado: a partir de 6 datos, una estimación de precios para los 30 días.</div>
+
+      <div class="panel-label" style="margin-top:1.6rem;color:var(--ochre)">2.4 · Integración numérica</div>
+      <p class="plain">El gasto del mes es el <b>área bajo la curva de precios</b>: si la familia compra cada día, sumar el costo de todos los días equivale a integrar la curva. Implementamos tres reglas de cuadratura: la <b>regla del trapecio</b> (une los puntos con rectas), <b>Simpson 1/3</b> y <b>Simpson 3/8</b> (ajustan la curva con parábolas). Comparamos las tres contra una referencia muy fina y confirmamos que <b>Simpson es más preciso</b> que el trapecio, porque las parábolas se ajustan mucho mejor a una curva suave.</p>
+      <p class="plain">El gasto total se obtiene multiplicando el área bajo la curva de precios por el consumo diario de cada producto. Comparando con lo que la familia habría pagado a precios iniciales, calculamos la <b>pérdida del poder adquisitivo</b>.</p>
+      <div class="concept-box"><b>Regla de Simpson 1/3:</b> <code>∫ f ≈ (h/3)·(f₀ + 4f₁ + 2f₂ + 4f₃ + … + fₙ)</code> (requiere un número par de subintervalos). Resultado: gasto ≈ <b>Bs 875</b> en crisis frente a ≈ Bs 680 a precios normales, una pérdida cercana al <b>29%</b>.</div>
+
+      <div class="panel-label" style="margin-top:1.6rem;color:var(--ochre)">2.5 · Métodos de raíces de ecuaciones</div>
+      <p class="plain">Para hallar el “día cero” definimos la función <code>f(t) = gasto acumulado(t) − presupuesto</code> y buscamos dónde vale cero. Usamos tres métodos: <b>Bisección</b> (parte el intervalo a la mitad repetidamente; lenta pero infalible si hay cambio de signo), <b>Newton-Raphson</b> (usa la pendiente de la función para saltar muy cerca de la raíz; rapidísima, pero necesita la derivada y una buena estimación inicial) y <b>Secante</b> (como Newton, pero estima la pendiente con dos puntos, sin derivada).</p>
+      <p class="plain">Una elegancia del modelo: la derivada que necesita Newton es simplemente el <b>gasto diario</b> (consumo × precio del día), así que no hubo que derivar numéricamente. También estimamos el <b>orden de convergencia</b> de cada método a partir de la rapidez con que se reduce el error, confirmando los valores teóricos.</p>
+      <div class="concept-box"><b>Newton-Raphson:</b> <code>tₙ₊₁ = tₙ − f(tₙ) / f′(tₙ)</code>. Resultado: con un presupuesto de Bs 600 para los tres productos, el día cero cae alrededor del <b>día 20</b>. Órdenes estimados: Newton ≈ 2, Secante ≈ 1,6, Bisección ≈ 1.</div>
+    </div>
+
+    <!-- ====== QUE METODO FUE MEJOR ====== -->
+    <div class="panel explain mb-4">
+      <div class="panel-label">3 · ¿Qué método resultó más útil?</div>
+      <p class="plain">No hay un “mejor método” absoluto: cada uno brilla bajo ciertas condiciones. Esa fue, quizá, la lección más importante del proyecto —elegir la herramienta correcta según el problema y las propiedades de los datos—.</p>
+      <div class="tbl-scroll" style="margin-top:1rem"><table class="ctab">
+        <thead><tr><th>Área</th><th>Métodos implementados</th><th>Requisito clave</th><th>Conclusión</th></tr></thead>
+        <tbody>
+        <tr><td><b>Sistemas lineales</b></td><td>Jacobi, Gauss-Seidel, SOR, LU, Gradiente Conjugado</td><td>Iterativos: dominancia diagonal. CG: simétrica y definida positiva. LU: no singular.</td><td>En nuestra matriz (simétrica y dominante) el <b>Gradiente Conjugado</b> fue el más rápido (3 iteraciones). En general, <b>LU</b> es el más robusto porque no exige condiciones de convergencia.</td></tr>
+        <tr><td><b>EDO</b></td><td>Euler, Heun, RK4 (usamos RK4)</td><td>Función evaluable; paso h razonable.</td><td><b>RK4</b>: el mejor equilibrio entre precisión y costo (orden 4).</td></tr>
+        <tr><td><b>Interpolación</b></td><td>Lagrange, splines (usamos splines cúbicos)</td><td>Nodos con x distintos y crecientes.</td><td><b>Splines</b>: suaves y sin oscilaciones; evitan el fenómeno de Runge de los polinomios de alto grado.</td></tr>
+        <tr><td><b>Integración</b></td><td>Trapecio, Simpson 1/3, Simpson 3/8</td><td>Muestreo uniforme; Simpson pide n par o múltiplo de 3.</td><td><b>Simpson</b>: más preciso que el trapecio gracias a las parábolas (orden 4 vs 2).</td></tr>
+        <tr><td><b>Raíces</b></td><td>Bisección, Newton-Raphson, Secante</td><td>Newton: derivada y buena x₀. Bisección: cambio de signo.</td><td><b>Newton</b>: el más rápido (orden ≈ 2). <b>Bisección</b>: el más robusto cuando no hay buena estimación inicial.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <!-- ====== LIMITACIONES ====== -->
+    <div class="panel explain mb-4">
+      <div class="panel-label">4 · Limitaciones del modelo</div>
+      <p class="plain">Como todo modelo, el nuestro es una simplificación de la realidad. Conviene reconocer sus límites:</p>
+      <ul class="know-ul" style="font-size:.96rem;line-height:1.7">
+        <li>Los <b>precios</b> son valores realistas anclados a cifras reportadas, pero no un registro oficial día por día: tal serie pública con esa granularidad no existe.</li>
+        <li>Trabajamos con una <b>canasta de solo tres productos</b> (pollo, arroz, aceite), no con la canasta completa, por lo que las cifras de gasto son parciales.</li>
+        <li>Asumimos <b>consumo constante</b> (las aves y la familia consumen lo mismo cada día), cuando en la realidad varía.</li>
+        <li>El sistema logístico del Módulo 1 es un <b>modelo reducido</b> (3×3): la red real de abastecimiento es mucho más grande y compleja.</li>
+        <li>Los modelos son <b>determinísticos y suaves</b>: no incorporan la incertidumbre, los choques bruscos ni las compras de pánico típicas de una crisis.</li>
+        <li>Los splines pueden volverse poco fiables si se <b>extrapola</b> mucho más allá del rango de los datos.</li>
+      </ul>
+    </div>
+
+    <!-- ====== MEJORAS ====== -->
+    <div class="panel explain mb-4">
+      <div class="panel-label">5 · Posibles mejoras</div>
+      <ul class="know-ul" style="font-size:.96rem;line-height:1.7">
+        <li>Incorporar <b>datos reales</b> de precios de fuentes oficiales y ampliar la canasta a más productos.</li>
+        <li>Modelar <b>consumo variable</b> (por ejemplo, el crecimiento de las aves) para que la EDO produzca curvas y no solo rectas.</li>
+        <li>Añadir <b>análisis de incertidumbre</b> (bandas de error, escenarios optimista/pesimista) y comparar más métodos por módulo.</li>
+        <li>Sumar los <b>escenarios F y G</b> del desafío: sistemas mal condicionados (rumores) y una EDO de difusión social de la opinión.</li>
+        <li>Conectar los módulos a una <b>base de datos en vivo</b> para actualizar automáticamente el mapa de bloqueos y los precios.</li>
+      </ul>
+    </div>
+
+    <!-- ====== REFLEXION ====== -->
+    <div class="panel conclusion-card">
+      <div class="panel-label">6 · Reflexión final</div>
+      <p class="plain">Detrás de cada titular sobre un bloqueo hay números que rara vez vemos: cuántos días aguanta el alimento de una granja, cuánto sube el plato de comida de una familia, qué día exacto el presupuesto deja de alcanzar. Este proyecto mostró que los <b>métodos numéricos</b> no son fórmulas abstractas, sino una <b>lente</b> para volver concretos esos costos humanos y, con ello, para <b>anticipar y decidir mejor</b>: cuántos días hay para reaccionar, qué producto golpea más, cuándo intervenir.</p>
+      <p class="plain">También aprendimos que la matemática es <b>honesta sobre sus límites</b>: cada método exige condiciones, y cuando no se cumplen, lo correcto no es forzar un número, sino reconocerlo y elegir otra herramienta. Un modelo nunca reemplaza la complejidad de la realidad —la gente, las decisiones, lo imprevisible—, pero sí la ilumina lo suficiente como para actuar con más información y más empatía.</p>
+      <p class="plain mb-0">Convertir una crisis en ecuaciones, resolverlas con cuidado y volver a interpretarlas en términos humanos: en ese ida y vuelta entre el número y la persona está, quizá, el verdadero sentido de los métodos numéricos.</p>
+    </div>
+  </div>
 </main>
 <footer><div class="container d-flex flex-wrap justify-content-between gap-2"><span>SIMNUM&#183;CRISIS &#8212; Proyecto final de M&#233;todos Num&#233;ricos</span><span class="faint">An&#225;lisis estrictamente acad&#233;mico y neutral &#183; La Paz / El Alto</span></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
