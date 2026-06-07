@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecuaciones diferenciales ordinarias · SimNum·Crisis</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="bg-atmos"></div><div class="bg-grid"></div>
+<nav class="navbar navbar-expand-lg fixed-top"><div class="container"><a class="navbar-brand d-flex align-items-center" href="index.html"><span class="brand-mark">&#8721;</span> SimNum<span class="dim" style="font-weight:400">&#183;Crisis</span></a><button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse justify-content-end" id="nav"><ul class="navbar-nav align-items-lg-center"><li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li><li class="nav-item"><a class="nav-link" href="modulo1.html">Sistemas de ecuaciones lineales</a></li><li class="nav-item"><a class="nav-link active" href="modulo2.html">Ecuaciones diferenciales ordinarias</a></li><li class="nav-item"><a class="nav-link" href="modulo3.html">Interpolaci&#243;n</a></li><li class="nav-item"><a class="nav-link" href="modulo4.html">Integraci&#243;n num&#233;rica</a></li><li class="nav-item"><a class="nav-link" href="modulo5.html">M&#233;todos de ra&#237;ces de ecuaciones</a></li><li class="nav-item"><a class="nav-link" href="conclusiones.html">Conclusiones</a></li></ul></div></div></nav>
+<main class="subpage">
+<div class="container section">
+    <div class="section-head">
+      <div class="modnum"><span class="ln"></span> MÓDULO 02 · ECUACIONES DIFERENCIALES ORDINARIAS</div>
+      <h2>Vaciado de un silo bajo bloqueo</h2>
+      <p class="dim" style="max-width:80ch">Una granja avícola de 30.000 aves guarda su alimento en un silo. Durante un bloqueo no llegan camiones a rellenarlo, pero las aves siguen comiendo, así que la reserva solo baja. Con el método de <b style="color:var(--text)">Runge-Kutta de 4.º orden</b> calculamos cuántos días resiste el silo antes de vaciarse.</p>
+    </div>
+
+    <div class="panel explain mb-4">
+      <div class="panel-label">El problema, en palabras simples</div>
+      <p class="plain">Una granja guarda el alimento de sus aves en un <b>silo</b>. Normalmente llegan camiones que lo rellenan, pero durante un <b>bloqueo</b> esos camiones no pueden pasar. Mientras tanto, las 30.000 aves <b>siguen comiendo todos los días</b>. Resultado: la reserva solo baja. La pregunta es: <b>¿cuántos días aguanta el silo antes de quedar vacío?</b> Saberlo permite anticipar cuándo la situación se vuelve crítica para la granja.</p>
+      <div class="concept-box mt-1"><b>¿Qué es una "ecuación diferencial" aquí?</b> Es solo una regla que dice <b>qué tan rápido cambia la reserva</b>. Se escribe <span class="mono" style="color:var(--ochre)">R′(t) = E − C</span> y se lee: “lo que sube o baja la reserva cada día es igual a lo que entra menos lo que se consume”. Si entra 0 y se consumen 2,1 toneladas, la reserva baja 2,1 toneladas por día.</div>
+      <div class="panel-label" style="margin-top:1.4rem">¿Qué significa cada símbolo?</div>
+      <div class="xi-list">
+        <div class="xi-item"><span class="xi-chip">R</span><div><b>Reserva</b><small>toneladas de alimento que quedan en el silo en el día t</small></div></div>
+        <div class="xi-item"><span class="xi-chip" style="font-size:1rem">R&#8320;</span><div><b>Reserva inicial</b><small>lo que hay al empezar el bloqueo (15 t por defecto)</small></div></div>
+        <div class="xi-item"><span class="xi-chip">C</span><div><b>Consumo</b><small>lo que comen las aves por día (2,1 t)</small></div></div>
+        <div class="xi-item"><span class="xi-chip">E</span><div><b>Entrada</b><small>alimento que logra entrar por día (0 en bloqueo total)</small></div></div>
+      </div>
+      <div class="concept-box mt-3"><b>¿Y por qué la gráfica es una recta?</b> Porque la reserva baja <b>siempre al mismo ritmo</b> (2,1 t cada día). Cuando el ritmo no cambia, el resultado es una línea recta —como bajar una escalera de escalones idénticos—. Solo se vería <b>curva</b> si el ritmo cambiara, por ejemplo si las aves comieran cada vez más. El método <b>Runge-Kutta 4</b> avanza día por día calculando cuánto baja la reserva, y sirve igual para rectas que para curvas.</div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="panel h-100">
+          <div class="panel-label">Parámetros del modelo</div>
+          <div class="algo-note">RK4 promedia cuatro pendientes por paso: <code>Rₙ₊₁ = Rₙ + (h/6)(k₁+2k₂+2k₃+k₄)</code>, con <code>R′ = E−C</code>. Es de 4.º orden: mucho más preciso que Euler para el mismo paso h.</div>
+          <div class="row g-3">
+            <div class="col-6"><label class="cell-lbl d-block mb-1">RESERVA INICIAL R(0) — t</label><input type="number" id="m2_R0" class="num-in" value="15" step="0.5"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">CONSUMO C — t/día</label><input type="number" id="m2_C" class="num-in" value="2.1" step="0.1"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">ENTRADA E(t) — t/día</label><input type="number" id="m2_E" class="num-in" value="0" step="0.1"></div>
+            <div class="col-6"><label class="cell-lbl d-block mb-1">PASO h — día</label><input type="number" id="m2_h" class="num-in" value="0.5" step="0.1"></div>
+            <div class="col-12"><label class="cell-lbl d-block mb-1">HORIZONTE — días</label><input type="number" id="m2_tmax" class="num-in" value="15" step="1"></div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <button class="btn-calc" id="m2_btnCalc">▸ Calcular</button>
+            <button class="btn-ghost" id="m2_btnDrip">Goteo parcial (E=0.5)</button>
+            <button class="btn-ghost" id="m2_btnReset">Restaurar</button>
+          </div>
+          <p class="helper mt-3 mb-0">Sube la entrada E hasta igualar o superar el consumo C y observa cómo la reserva deja de caer: el bloqueo “se rompe”.</p>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="panel mb-4">
+          <div class="panel-label">Resultado · autonomía del silo</div>
+          <div class="res-x" id="m2_emptyBox"></div>
+        </div>
+        <div class="panel mb-4">
+          <div class="panel-label">Declive de la reserva R(t)</div>
+          <canvas id="siloChart" height="200"></canvas>
+        </div>
+        <div class="panel mb-4">
+          <div class="panel-label">Comparación · ¿y si logra entrar algo de alimento?</div>
+          <canvas id="siloCompareChart" height="200"></canvas>
+          <p class="helper mt-2 mb-0">Misma reserva y consumo; cambia solo cuánto alimento entra por día (E). Mientras más entra, más dura —o nunca se acaba—.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Tabla de iteraciones RK4</div>
+          <div class="tbl-scroll"><table class="tbl-iter"><thead><tr><th>n</th><th>t</th><th>k₁</th><th>k₂</th><th>k₃</th><th>k₄</th><th>R(t)</th></tr></thead><tbody id="m2_iterBody"></tbody></table></div>
+        </div>
+        <div class="interp mt-4" id="m2_interpBox" style="display:none"><h5>Interpretación del resultado</h5><div id="m2_interpText"></div></div>
+      </div>
+    </div>
+
+    <div class="panel conclusion-card mt-4">
+      <div class="panel-label">En resumen · ¿qué nos dice este módulo?</div>
+      <p class="plain mb-2" id="m2_plainConclusion"></p>
+      <p class="plain faint-note mb-0">La lección práctica: durante un bloqueo, el tiempo corre en contra de la granja. Conocer la <b>autonomía del silo</b> permite saber cuántos días hay para reaccionar antes de que las aves se queden sin alimento, y muestra por qué incluso un pequeño goteo de comida por rutas alternas puede evitar una pérdida masiva.</p>
+    </div>
+  </div>
+</main>
+<footer><div class="container d-flex flex-wrap justify-content-between gap-2"><span>SIMNUM&#183;CRISIS &#8212; Proyecto final de M&#233;todos Num&#233;ricos</span><span class="faint">An&#225;lisis estrictamente acad&#233;mico y neutral &#183; La Paz / El Alto</span></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="modulo2.js"></script>
+</body>
+</html>
