@@ -166,3 +166,21 @@ footer{border-top:1px solid var(--line-soft);padding:2.5rem 0;color:var(--text-f
 .m3-grid .num-in{padding:.45rem .25rem;font-size:.88rem}
 .m3-h{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.04em;color:var(--text-faint);text-transform:uppercase;text-align:center;padding-bottom:.15rem}
 .m3-h:first-child{text-align:left}
+
+/* Modulo 1: multi-metodo (diagnostico, SOR, LU) */
+.diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.diag-grid .dom-badge{font-size:.71rem;padding:.34rem .55rem;width:100%}
+.dom-warn{color:var(--ochre);border-color:rgba(228,166,77,.4);background:rgba(228,166,77,.07)}
+.lu-mat{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;font-family:var(--font-mono);font-size:.9rem}
+.lu-mat span{background:var(--ink);border:1px solid var(--line);border-radius:7px;padding:.55rem .2rem;text-align:center;color:var(--text-dim)}
+select.num-in{cursor:pointer}
+
+/* Modulo 1: metodos multiples (LU, bloqueo) */
+.blocked-msg{color:var(--crisis);font-size:.98rem;font-weight:600}
+.blocked-msg p{color:var(--text-dim);margin:.5rem 0 0;font-size:.9rem;font-weight:400}
+.lu-wrap{display:flex;gap:1rem;flex-wrap:wrap;padding:.3rem 0}
+.lu-mat{flex:1;min-width:150px}
+.lu-title{font-family:var(--font-mono);font-size:.7rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.lu-table{width:100%;font-family:var(--font-mono);font-size:.85rem;border-collapse:collapse}
+.lu-table td{border:1px solid var(--line);padding:.45rem .3rem;text-align:center;color:var(--text-dim)}
+select.num-in{cursor:pointer}
