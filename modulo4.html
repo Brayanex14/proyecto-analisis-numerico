@@ -58,7 +58,13 @@
           <div class="res-x" id="m4_resBox"></div>
         </div>
         <div class="panel mb-4">
-          <div class="panel-label">Gasto por producto · en crisis vs. si no subían</div>
+          <div class="panel-label">Área bajo la curva de precios · la integral</div>
+          <div class="mb-2"><select id="m4_prodSel" class="num-in" style="text-align:left;max-width:220px"><option value="pollo">Pollo</option><option value="arroz">Arroz</option><option value="aceite">Aceite</option></select></div>
+          <canvas id="areaChart" height="200"></canvas>
+          <p class="helper mt-2 mb-0" id="m4_areaNote"></p>
+        </div>
+        <div class="panel mb-4">
+          <div class="panel-label">Comparativa por producto · gasto en crisis vs. si no subían</div>
           <canvas id="costChart" height="200"></canvas>
         </div>
         <div class="panel">
